@@ -3,7 +3,8 @@ package com.yasuaki.gradle.jokesfromhell;
 import com.example.JokesInHell;
 
 import org.junit.Test;
-import static org.assertj.core.api.Java6Assertions.*;
+
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
 
 /**
@@ -16,4 +17,5 @@ public class MainFragmentTest {
     public void isJokeReturned(){
         assertThat(JokesInHell.getJoke()).isInstanceOf(String.class);
     }
+
 }

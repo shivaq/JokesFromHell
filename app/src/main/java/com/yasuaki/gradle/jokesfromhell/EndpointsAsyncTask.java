@@ -18,12 +18,16 @@ import java.io.IOException;
  */
 
 class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+
     private static MyApi myApiService = null;
     private Context context;
 
+    private fetchDataListener mFetchDataListener = null;
+    private Exception mFetchDataError = null;
+
     @Override
     protected String doInBackground(Pair<Context, String>... params) {
-        if(myApiService == null) {  // Only do this once
+        if (myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     // options for running against local devappserver
@@ -53,6 +57,26 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
 
     @Override
     protected void onPostExecute(String result) {
+        if (this.mFetchDataListener != null) {
+            this.mFetchDataListener.onComplete(result, mFetchDataError);
+        }
         Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onCancelled() {
+        if(this.mFetchDataListener != null){
+            this.mFetchDataListener.onComplete(null, mFetchDataError);
+        }
+        super.onCancelled();
+    }
+
+    public static interface fetchDataListener {
+        public void onComplete(String result, Exception e);
+    }
+
+    public EndpointsAsyncTask setListener(fetchDataListener listener) {
+        this.mFetchDataListener = listener;
+        return this;
     }
 }
