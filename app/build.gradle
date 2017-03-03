@@ -57,4 +57,6 @@ dependencies {
     compile project(':jokesinhell')
     // android library
     compile project(':jokedisplay')
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+    compile project(path: ':backend', configuration: 'android-endpoints')
 }
