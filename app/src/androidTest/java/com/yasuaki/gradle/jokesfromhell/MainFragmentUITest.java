@@ -5,14 +5,11 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.udacity.gradle.builditbigger.MainActivity;
-import com.udacity.gradle.builditbigger.R;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import yasuaki.kyoto.com.jokedisplay.DisplayActivity;
+import yasuaki.kyoto.com.jokedisplay.DisplayJoke;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -21,6 +18,7 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by Yasuaki on 2017/02/28.
@@ -29,8 +27,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 public class MainFragmentUITest {
 
     @Rule
-    public IntentsTestRule<DisplayActivity> mDisplayActivityIntentsTestRule =
-            new IntentsTestRule<>(DisplayActivity.class);
+    public IntentsTestRule<DisplayJoke> mDisplayActivityIntentsTestRule =
+            new IntentsTestRule<>(DisplayJoke.class);
 
     @Rule
     public ActivityTestRule<MainActivity> mMainFragmentTestRule =
@@ -49,7 +47,7 @@ public class MainFragmentUITest {
         //When
         onView(withId(R.id.btn_launch_joke_activity)).perform(click());
         //Then
-        intended(hasComponent("yasuaki.kyoto.com.jokedisplay.DisplayActivity"));
+        intended(hasComponent("yasuaki.kyoto.com.jokedisplay.DisplayJoke"));
         intended(hasExtra(MainFragment.EXTRA_TEXT, "joke"));
         onView(withId(R.id.text_joke)).check(matches(isDisplayed()));
     }
