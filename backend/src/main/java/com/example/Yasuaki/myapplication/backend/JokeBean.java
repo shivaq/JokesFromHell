@@ -1,17 +1,17 @@
-package com.example.Yasuaki.myapplication.backend;
+package com.example.yasuaki.myapplication.backend;
 
 /**
  * The object model for the data we are sending through endpoints
  */
-public class MyBean {
+public class JokeBean {
 
-    private String myData;
+    private String mJoke;
 
     public String getData() {
-        return myData;
+        return mJoke;
     }
 
     public void setData(String data) {
-        myData = data;
+        mJoke = data;
     }
 }

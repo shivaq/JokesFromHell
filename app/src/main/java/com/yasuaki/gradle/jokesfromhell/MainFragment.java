@@ -1,10 +1,8 @@
 package com.yasuaki.gradle.jokesfromhell;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,12 +47,13 @@ public class MainFragment extends Fragment {
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
         mAdView.loadAd(adRequest);
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(getActivity(), "Manfred"));
+
         return root;
     }
     @OnClick(R.id.btn_launch_joke_activity)
     void onItemClicked() {
         String joke = JokesInHell.getJoke();
+//        String joke = new EndpointsAsyncTask().execute(getActivity());
         Intent startIntent = new Intent(getActivity(), DisplayJoke.class);
         startIntent.putExtra(EXTRA_TEXT, joke);
         startActivity(startIntent);

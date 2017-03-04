@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.util.Pair;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,10 +13,7 @@ import org.junit.runner.RunWith;
 
 import java.util.concurrent.CountDownLatch;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by Yasuaki on 2017/03/03.
@@ -47,7 +43,10 @@ public class AsyncTaskTest {
 
     @Test
     public void isJokeFetchedFromGCE(){
+        // Given
         EndpointsAsyncTask jokeTask = new EndpointsAsyncTask();
+
+        //When
         jokeTask.setListener(new EndpointsAsyncTask.fetchDataListener() {
             @Override
             public void onComplete(String result, Exception e) {
@@ -55,16 +54,11 @@ public class AsyncTaskTest {
                 mError = e;
                 mLatch.countDown();
             }
-        }).execute(new Pair<Context, String>(mContext, "Manfred"));
-
-        onView(withText("Hi, Manfred")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
-//        onView(withText("Manfred")).inRoot(withDecorView‌​(not(getActivity().g‌​etWindow().getDecorV‌​iew()))) .check(matches(isDisplayed()));
-
-        // When
-        // GCE にアクセスした時
-
+        }).execute();
 
         // Then
-        // String を取得できる
+        assertThat(mError).isNull();
+        assertThat(mJoke).isNotEmpty();
+        assertThat(mJoke).isInstanceOf(String.class);
     }
 }

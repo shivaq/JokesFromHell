@@ -1,11 +1,10 @@
 package com.yasuaki.gradle.jokesfromhell;
 
+
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.util.Pair;
-import android.widget.Toast;
 
-import com.example.yasuaki.myapplication.backend.myApi.MyApi;
+import com.example.yasuaki.myapplication.backend.jokeApi.JokeApi;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -17,18 +16,19 @@ import java.io.IOException;
  * Created by Yasuaki on 2017/03/03.
  */
 
-class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
-    private static MyApi myApiService = null;
+    private static JokeApi jokeApiService = null;
     private Context context;
+    private String mJoke;
 
     private fetchDataListener mFetchDataListener = null;
     private Exception mFetchDataError = null;
 
     @Override
-    protected String doInBackground(Pair<Context, String>... params) {
-        if (myApiService == null) {  // Only do this once
-            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
+    protected String doInBackground(Context... params) {
+        if (jokeApiService == null) {  // Only do this once
+            JokeApi.Builder builder = new JokeApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
@@ -42,14 +42,13 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
                     });
             // end options for devappserver
 
-            myApiService = builder.build();
+            jokeApiService = builder.build();
         }
 
-        context = params[0].first;
-        String name = params[0].second;
+        context = params[0];
 
         try {
-            return myApiService.sayHi(name).execute().getData();
+            return jokeApiService.pullJokeFromHell().execute().getData();
         } catch (IOException e) {
             return e.getMessage();
         }
@@ -60,7 +59,8 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
         if (this.mFetchDataListener != null) {
             this.mFetchDataListener.onComplete(result, mFetchDataError);
         }
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        // この result を アプリに渡す
+        mJoke = result;
     }
 
     @Override
@@ -71,12 +71,16 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
         super.onCancelled();
     }
 
-    public static interface fetchDataListener {
-        public void onComplete(String result, Exception e);
+    public interface fetchDataListener {
+        void onComplete(String result, Exception e);
     }
 
-    public EndpointsAsyncTask setListener(fetchDataListener listener) {
+    EndpointsAsyncTask setListener(fetchDataListener listener) {
         this.mFetchDataListener = listener;
         return this;
+    }
+
+    public String getJoke() {
+        return mJoke;
     }
 }
