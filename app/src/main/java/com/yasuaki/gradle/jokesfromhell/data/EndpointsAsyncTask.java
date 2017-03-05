@@ -1,4 +1,4 @@
-package com.yasuaki.gradle.jokesfromhell;
+package com.yasuaki.gradle.jokesfromhell.data;
 
 
 import android.content.Context;
@@ -16,7 +16,7 @@ import java.io.IOException;
  * Created by Yasuaki on 2017/03/03.
  */
 
-class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
+public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
     private static JokeApi jokeApiService = null;
     private Context context;
@@ -75,7 +75,7 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
         void onComplete(String result, Exception e);
     }
 
-    EndpointsAsyncTask setListener(fetchDataListener listener) {
+    public EndpointsAsyncTask setListener(fetchDataListener listener) {
         this.mFetchDataListener = listener;
         return this;
     }
