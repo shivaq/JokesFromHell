@@ -5,6 +5,9 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.yasuaki.gradle.jokesfromhell.data.EndpointsAsyncTask;
+import com.yasuaki.gradle.jokesfromhell.ui.MainActivity;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,9 +18,6 @@ import java.util.concurrent.CountDownLatch;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by Yasuaki on 2017/03/03.
- */
 @RunWith(AndroidJUnit4.class)
 public class AsyncTaskTest {
 
@@ -28,7 +28,7 @@ public class AsyncTaskTest {
     Context mContext = InstrumentationRegistry.getTargetContext();
 
     @Rule
-    public ActivityTestRule<MainActivity> mMainFragmentTestRule =
+    public ActivityTestRule<MainActivity> mMainActivityTestRule =
             new ActivityTestRule<MainActivity>(MainActivity.class, true, true);
 
     @Before
