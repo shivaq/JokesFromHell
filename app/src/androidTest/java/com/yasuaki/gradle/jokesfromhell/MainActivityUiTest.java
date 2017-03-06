@@ -36,7 +36,7 @@ public class MainActivityUiTest {
     public ActivityTestRule<MainActivity> mMainActivityTestRule =
             new ActivityTestRule<MainActivity>(MainActivity.class, true, false);
 
-    private void startMainFragmentWithExtra(){
+    private void startMainActivityWithExtra(){
         Intent startIntent = new Intent();
         startIntent.putExtra(MainActivity.EXTRA_TEXT, "joke");
         mMainActivityTestRule.launchActivity(startIntent);
@@ -45,7 +45,7 @@ public class MainActivityUiTest {
     @Test
     public void isDisplayActivityDisplayedWithExtra(){
         //Given
-        startMainFragmentWithExtra();
+        startMainActivityWithExtra();
         //When
         onView(withId(R.id.btn_launch_joke_activity)).perform(click());
         //Then

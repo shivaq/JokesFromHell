@@ -1,18 +1,16 @@
 package com.yasuaki.gradle.jokesfromhell.ui;
 
+import com.yasuaki.gradle.jokesfromhell.data.EndpointsAsyncTask;
+
 import javax.inject.Inject;
 
 public class MainPresenter<V extends MainMvpView>implements MainMvpPresenter<V>{
-
-//    @Inject
-//    public MainPresenter(DataManager dataManager) {
-//        super(dataManager);
-//    }
 
     private V mMainMvpView;
 
     @Inject
     public MainPresenter() {
+
     }
 
     @Override
@@ -25,12 +23,20 @@ public class MainPresenter<V extends MainMvpView>implements MainMvpPresenter<V>{
         mMainMvpView = null;
     }
 
-    public boolean isViewAttached() {
-        return mMainMvpView != null;
+    @Override
+    public void fetchJoke() {
+        EndpointsAsyncTask endpointsAsyncTask = new EndpointsAsyncTask();
+        endpointsAsyncTask.execute();
+
+        endpointsAsyncTask.setListener(new EndpointsAsyncTask.fetchDataListener() {
+            @Override
+            public void onComplete(String result, Exception e) {
+                getMvpView().intentJokeDisplay(result);
+            }
+        });
     }
 
-    public V getMvpView() {
+    private V getMvpView() {
         return mMainMvpView;
     }
-    //todo:EndPointsAsyncTask を インジェクトさせる
 }

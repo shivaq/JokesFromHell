@@ -1,7 +1,5 @@
 package com.yasuaki.gradle.jokesfromhell;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -25,28 +23,27 @@ public class AsyncTaskTest {
     Exception mError = null;
     CountDownLatch mLatch = null;
 
-    Context mContext = InstrumentationRegistry.getTargetContext();
-
     @Rule
     public ActivityTestRule<MainActivity> mMainActivityTestRule =
             new ActivityTestRule<MainActivity>(MainActivity.class, true, true);
 
     @Before
-    public void setUp(){
+    public void setUp() {
         mLatch = new CountDownLatch(1);
     }
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         mLatch.countDown();
     }
 
     @Test
-    public void isJokeFetchedFromGCE(){
+    public void isJokeFetchedFromGCE() throws InterruptedException {
         // Given
         EndpointsAsyncTask jokeTask = new EndpointsAsyncTask();
 
         //When
+        jokeTask.execute();
         jokeTask.setListener(new EndpointsAsyncTask.fetchDataListener() {
             @Override
             public void onComplete(String result, Exception e) {
@@ -54,9 +51,10 @@ public class AsyncTaskTest {
                 mError = e;
                 mLatch.countDown();
             }
-        }).execute();
+        });
 
         // Then
+        mLatch.await();//Wait here until mLatch count reaches zero.
         assertThat(mError).isNull();
         assertThat(mJoke).isNotEmpty();
         assertThat(mJoke).isInstanceOf(String.class);

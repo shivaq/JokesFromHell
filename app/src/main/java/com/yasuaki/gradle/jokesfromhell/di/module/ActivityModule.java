@@ -1,7 +1,9 @@
 package com.yasuaki.gradle.jokesfromhell.di.module;
 
 import android.app.Activity;
+import android.content.Context;
 
+import com.yasuaki.gradle.jokesfromhell.di.ActivityContext;
 import com.yasuaki.gradle.jokesfromhell.di.PerActivity;
 import com.yasuaki.gradle.jokesfromhell.ui.MainMvpPresenter;
 import com.yasuaki.gradle.jokesfromhell.ui.MainMvpView;
@@ -22,16 +24,16 @@ public class ActivityModule {
         this.mActivity = activity;
     }
 
-//    @Provides
-//    @ActivityContext
-//    Context provideContext() {
-//        return mActivity;
-//    }
-//
-//    @Provides
-//    Activity provideActivity() {
-//        return mActivity;
-//    }
+    @Provides
+    @ActivityContext
+    Context provideContext() {
+        return mActivity;
+    }
+
+    @Provides
+    Activity provideActivity() {
+        return mActivity;
+    }
 
     @Provides
     @PerActivity

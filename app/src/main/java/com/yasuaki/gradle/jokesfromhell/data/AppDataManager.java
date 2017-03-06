@@ -1,9 +1,5 @@
 package com.yasuaki.gradle.jokesfromhell.data;
 
-import android.content.Context;
-
-import com.yasuaki.gradle.jokesfromhell.di.ApplicationContext;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -13,10 +9,7 @@ import javax.inject.Singleton;
 @Singleton
 public class AppDataManager implements DataManager {
 
-    private final Context mContext;
-
     @Inject
-    public AppDataManager(@ApplicationContext Context context) {
-        mContext = context;
+    public AppDataManager(){
     }
 }

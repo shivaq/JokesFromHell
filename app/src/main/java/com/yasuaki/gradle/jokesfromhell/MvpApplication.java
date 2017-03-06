@@ -1,11 +1,13 @@
 package com.yasuaki.gradle.jokesfromhell;
 
 import android.app.Application;
-import android.content.Context;
 
+import com.yasuaki.gradle.jokesfromhell.data.DataManager;
 import com.yasuaki.gradle.jokesfromhell.di.component.ApplicationComponent;
 import com.yasuaki.gradle.jokesfromhell.di.component.DaggerApplicationComponent;
 import com.yasuaki.gradle.jokesfromhell.di.module.ApplicationModule;
+
+import javax.inject.Inject;
 
 import timber.log.Timber;
 
@@ -15,8 +17,8 @@ import timber.log.Timber;
 
 public class MvpApplication extends Application{
 
-//    @Inject
-//    DataManager mDataManager;
+    @Inject
+    DataManager mDataManager;
 
     private ApplicationComponent mApplicationComponent;
 
@@ -33,10 +35,6 @@ public class MvpApplication extends Application{
             Timber.uprootAll();
             Timber.plant(new Timber.DebugTree());
         }
-    }
-
-    public static MvpApplication get(Context context){
-        return(MvpApplication) context.getApplicationContext();
     }
 
     public ApplicationComponent getComponent(){

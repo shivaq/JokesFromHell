@@ -1,7 +1,6 @@
 package com.yasuaki.gradle.jokesfromhell.data;
 
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.yasuaki.myapplication.backend.jokeApi.JokeApi;
@@ -12,21 +11,27 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
+import timber.log.Timber;
+
 /**
  * Created by Yasuaki on 2017/03/03.
  */
 
-public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
+public class EndpointsAsyncTask extends AsyncTask<Void, Void, String>{
 
     private static JokeApi jokeApiService = null;
-    private Context context;
-    private String mJoke;
 
     private fetchDataListener mFetchDataListener = null;
     private Exception mFetchDataError = null;
 
+    @Inject
+    public EndpointsAsyncTask(){
+    }
+
     @Override
-    protected String doInBackground(Context... params) {
+    protected String doInBackground(Void... params) {
         if (jokeApiService == null) {  // Only do this once
             JokeApi.Builder builder = new JokeApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
@@ -45,8 +50,6 @@ public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
             jokeApiService = builder.build();
         }
 
-        context = params[0];
-
         try {
             return jokeApiService.pullJokeFromHell().execute().getData();
         } catch (IOException e) {
@@ -58,9 +61,9 @@ public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
     protected void onPostExecute(String result) {
         if (this.mFetchDataListener != null) {
             this.mFetchDataListener.onComplete(result, mFetchDataError);
+            Timber.d("EndpointsAsyncTask:onPostExecute: joke is %s", result);
+
         }
-        // この result を アプリに渡す
-        mJoke = result;
     }
 
     @Override
@@ -78,9 +81,5 @@ public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
     public EndpointsAsyncTask setListener(fetchDataListener listener) {
         this.mFetchDataListener = listener;
         return this;
-    }
-
-    public String getJoke() {
-        return mJoke;
     }
 }

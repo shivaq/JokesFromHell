@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
-import com.example.JokesInHell;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.yasuaki.gradle.jokesfromhell.MvpApplication;
@@ -24,11 +25,13 @@ import butterknife.OnClick;
 import yasuaki.kyoto.com.jokedisplay.DisplayJoke;
 
 
-public class MainActivity extends AppCompatActivity implements MainMvpView{
+public class MainActivity extends AppCompatActivity
+        implements MainMvpView {
 
     public static final String EXTRA_TEXT = "com.yasuaki.gradle.jokesfromhell.EXTRA_TEXT";
 
     private ActivityComponent mActivityComponent;
+    private String mJoke;
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements MainMvpView{
     Button mLaunchJokeBtn;
     @BindView(R.id.adView)
     AdView mAdView;
+    @BindView(R.id.loading_spinner)
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements MainMvpView{
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if(mActivityComponent == null){
+        if (mActivityComponent == null) {
             mActivityComponent = DaggerActivityComponent.builder()
                     .activityModule(new ActivityModule(this))
                     .applicationComponent(((MvpApplication) getApplication()).getComponent())
@@ -54,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements MainMvpView{
         mActivityComponent.inject(this);
         mPresenter.onAttachView(this);
 
-//        mPresenter.onAttachMvpView(this);
 
         // Create an ad request. Check logcat output for the hashed device ID to
         // get test ads on a physical device. e.g.
@@ -89,14 +93,28 @@ public class MainActivity extends AppCompatActivity implements MainMvpView{
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @OnClick(R.id.btn_launch_joke_activity)
     public void onItemClicked() {
-        String joke = JokesInHell.getJoke();
-//        String joke = new EndpointsAsyncTask().execute(getActivity());
+        showProgressBar();
+        mPresenter.fetchJoke();
+    }
+
+
+    private void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+
+    @Override
+    public void intentJokeDisplay(String joke) {
+        hideProgressBar();
         Intent startIntent = new Intent(this, DisplayJoke.class);
         startIntent.putExtra(EXTRA_TEXT, joke);
         startActivity(startIntent);

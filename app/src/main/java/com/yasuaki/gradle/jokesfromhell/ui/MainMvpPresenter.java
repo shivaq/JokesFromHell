@@ -12,4 +12,6 @@ public interface MainMvpPresenter<V extends MainMvpView> {
     void onAttachView(V MainMvpView);
 
     void onDetachView();
+
+    void fetchJoke();
 }
