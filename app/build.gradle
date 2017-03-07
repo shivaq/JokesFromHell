@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "24.0.3"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "com.udacity.gradle.builditbigger"
@@ -13,9 +13,36 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug{
+            debuggable true
+            shrinkResources false
+        }
         release {
+            debuggable false
+            shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions("stage", "mode")
+
+    productFlavors{
+        dev{
+            dimension "stage"
+            minSdkVersion 21
+            applicationIdSuffix ".dev"
+        }
+        prod{
+            dimension "stage"
+        }
+        free{
+            dimension "mode"
+            applicationIdSuffix ".free"
+        }
+        paid{
+            dimension "mode"
+            applicationIdSuffix ".paid"
         }
     }
 }
