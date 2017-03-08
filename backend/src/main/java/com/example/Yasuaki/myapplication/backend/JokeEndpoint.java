@@ -4,7 +4,7 @@
    https://github.com/GoogleCloudPlatform/gradle-appengine-templates/tree/master/HelloEndpoints
 */
 
-package com.example.yasuaki.myapplication.backend;
+package com.example.Yasuaki.myapplication.backend;
 
 import com.example.JokesInHell;
 import com.google.api.server.spi.config.Api;
