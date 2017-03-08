@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity
 
     private ActivityComponent mActivityComponent;
     private String mJoke;
-    InterstitialAd mInterstitialAd;
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -61,20 +60,6 @@ public class MainActivity extends AppCompatActivity
 
         mActivityComponent.inject(this);
         mPresenter.onAttachView(this);
-
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                requestNewInterstitial();
-                intentToDisplayActivity();
-            }
-        });
-
-        //load ad
-        requestNewInterstitial();
 
         // Create an ad request. Check logcat output for the hashed device ID to
         // get test ads on a physical device. e.g.
@@ -121,11 +106,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void storeJokeAndGoIntent(String joke) {
         mJoke = joke;
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        } else {
             intentToDisplayActivity();
-        }
     }
 
     public void intentToDisplayActivity(){
@@ -142,11 +123,4 @@ public class MainActivity extends AppCompatActivity
         progressBar.setVisibility(View.GONE);
     }
 
-    private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
-                .build();
-
-        mInterstitialAd.loadAd(adRequest);
-    }
 }
