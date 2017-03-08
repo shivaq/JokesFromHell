@@ -9,10 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.yasuaki.gradle.jokesfromhell.MvpApplication;
 import com.yasuaki.gradle.jokesfromhell.R;
 import com.yasuaki.gradle.jokesfromhell.di.component.ActivityComponent;
