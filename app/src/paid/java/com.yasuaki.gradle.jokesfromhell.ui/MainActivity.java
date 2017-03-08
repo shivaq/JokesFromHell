@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        //Create relationship with object graph with dagger 2
         if (mActivityComponent == null) {
             mActivityComponent = DaggerActivityComponent.builder()
                     .activityModule(new ActivityModule(this))
@@ -89,7 +90,6 @@ public class MainActivity extends AppCompatActivity
         mPresenter.fetchJoke();
     }
 
-
     private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -98,12 +98,16 @@ public class MainActivity extends AppCompatActivity
         progressBar.setVisibility(View.GONE);
     }
 
-
     @Override
-    public void intentJokeDisplay(String joke) {
+    public void storeJokeAndGoIntent(String joke) {
+        mJoke = joke;
+        intentToDisplayActivity();
+    }
+
+    public void intentToDisplayActivity(){
         hideProgressBar();
         Intent startIntent = new Intent(this, DisplayJoke.class);
-        startIntent.putExtra(EXTRA_TEXT, joke);
+        startIntent.putExtra(EXTRA_TEXT, mJoke);
         startActivity(startIntent);
     }
 }

@@ -9,8 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.yasuaki.gradle.jokesfromhell.MvpApplication;
 import com.yasuaki.gradle.jokesfromhell.R;
 import com.yasuaki.gradle.jokesfromhell.di.component.ActivityComponent;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity
 
     private ActivityComponent mActivityComponent;
     private String mJoke;
+    InterstitialAd mInterstitialAd;
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -59,6 +62,19 @@ public class MainActivity extends AppCompatActivity
         mActivityComponent.inject(this);
         mPresenter.onAttachView(this);
 
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                intentToDisplayActivity();
+            }
+        });
+
+        //load ad
+        requestNewInterstitial();
 
         // Create an ad request. Check logcat output for the hashed device ID to
         // get test ads on a physical device. e.g.
@@ -102,21 +118,35 @@ public class MainActivity extends AppCompatActivity
         mPresenter.fetchJoke();
     }
 
+    @Override
+    public void storeJokeAndGoIntent(String joke) {
+        mJoke = joke;
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            intentToDisplayActivity();
+        }
+    }
+
+    public void intentToDisplayActivity(){
+        hideProgressBar();
+        Intent startIntent = new Intent(this, DisplayJoke.class);
+        startIntent.putExtra(EXTRA_TEXT, mJoke);
+        startActivity(startIntent);
+    }
 
     private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
-
     private void hideProgressBar() {
         progressBar.setVisibility(View.GONE);
     }
 
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
+                .build();
 
-    @Override
-    public void intentJokeDisplay(String joke) {
-        hideProgressBar();
-        Intent startIntent = new Intent(this, DisplayJoke.class);
-        startIntent.putExtra(EXTRA_TEXT, joke);
-        startActivity(startIntent);
+        mInterstitialAd.loadAd(adRequest);
     }
 }

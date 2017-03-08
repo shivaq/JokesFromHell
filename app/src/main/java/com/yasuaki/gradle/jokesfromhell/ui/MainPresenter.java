@@ -31,7 +31,7 @@ public class MainPresenter<V extends MainMvpView>implements MainMvpPresenter<V>{
         endpointsAsyncTask.setListener(new EndpointsAsyncTask.fetchDataListener() {
             @Override
             public void onComplete(String result, Exception e) {
-                getMvpView().intentJokeDisplay(result);
+                getMvpView().storeJokeAndGoIntent(result);
             }
         });
     }

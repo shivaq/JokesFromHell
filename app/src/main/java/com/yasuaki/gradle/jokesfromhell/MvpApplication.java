@@ -26,7 +26,6 @@ public class MvpApplication extends Application{
     public void onCreate() {
         super.onCreate();
 
-
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this)).build();
 
