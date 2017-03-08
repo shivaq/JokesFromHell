@@ -11,7 +11,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
  * Created by Yasuaki on 2017/03/02.
  */
 
-public class MainFragmentTest {
+public class MainActivityTest {
 
     @Test
     public void isJokeReturned(){

@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.yasuaki.gradle.jokesfromhell.MvpApplication;
 import com.yasuaki.gradle.jokesfromhell.R;
 import com.yasuaki.gradle.jokesfromhell.di.component.ActivityComponent;
@@ -38,8 +36,6 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.btn_launch_joke_activity)
     Button mLaunchJokeBtn;
-    @BindView(R.id.adView)
-    AdView mAdView;
     @BindView(R.id.loading_spinner)
     ProgressBar progressBar;
 
@@ -49,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        //Create relationship with object graph with dagger 2
         if (mActivityComponent == null) {
             mActivityComponent = DaggerActivityComponent.builder()
                     .activityModule(new ActivityModule(this))
@@ -58,15 +55,6 @@ public class MainActivity extends AppCompatActivity
 
         mActivityComponent.inject(this);
         mPresenter.onAttachView(this);
-
-
-        // Create an ad request. Check logcat output for the hashed device ID to
-        // get test ads on a physical device. e.g.
-        // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -102,7 +90,6 @@ public class MainActivity extends AppCompatActivity
         mPresenter.fetchJoke();
     }
 
-
     private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -111,12 +98,16 @@ public class MainActivity extends AppCompatActivity
         progressBar.setVisibility(View.GONE);
     }
 
-
     @Override
-    public void intentJokeDisplay(String joke) {
+    public void storeJokeAndGoIntent(String joke) {
+        mJoke = joke;
+        intentToDisplayActivity();
+    }
+
+    public void intentToDisplayActivity(){
         hideProgressBar();
         Intent startIntent = new Intent(this, DisplayJoke.class);
-        startIntent.putExtra(EXTRA_TEXT, joke);
+        startIntent.putExtra(EXTRA_TEXT, mJoke);
         startActivity(startIntent);
     }
 }

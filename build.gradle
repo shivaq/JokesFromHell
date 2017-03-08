@@ -43,3 +43,28 @@ allprojects {
         googlePlayServicesVersion = '10.2.0'
     }
 }
+
+
+def unitTest = ":app:test"
+def uiTest = ":app:connectedAndroidTest"
+def runAppEngine = ":backend:appengineRun"
+def stopAppEngine = ":backend:appengineStop"
+
+task testWithAppEngine {
+    dependsOn = [runAppEngine, unitTest, uiTest]
+
+    //run app engine in daemon mode
+    evaluationDependsOn ":backend"
+    project(":backend"){
+        appengine{
+            daemon true
+        }
+    }
+    tasks.getByPath(unitTest).mustRunAfter tasks.getByPath(runAppEngine)
+    tasks.getByPath(uiTest).mustRunAfter tasks.getByPath(unitTest)
+
+    doLast {
+        println "test finished!"
+    }
+    finalizedBy tasks.getByPath(stopAppEngine)
+}

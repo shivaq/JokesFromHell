@@ -1,4 +1,4 @@
-package com.example.yasuaki.myapplication.backend;
+package com.example.Yasuaki.myapplication.backend;
 
 /**
  * The object model for the data we are sending through endpoints

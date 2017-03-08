@@ -49,7 +49,6 @@ public class EndpointsAsyncTask extends AsyncTask<Void, Void, String>{
 
             jokeApiService = builder.build();
         }
-
         try {
             return jokeApiService.pullJokeFromHell().execute().getData();
         } catch (IOException e) {
@@ -62,7 +61,6 @@ public class EndpointsAsyncTask extends AsyncTask<Void, Void, String>{
         if (this.mFetchDataListener != null) {
             this.mFetchDataListener.onComplete(result, mFetchDataError);
             Timber.d("EndpointsAsyncTask:onPostExecute: joke is %s", result);
-
         }
     }
 

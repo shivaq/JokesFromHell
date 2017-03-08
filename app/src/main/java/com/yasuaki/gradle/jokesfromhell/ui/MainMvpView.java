@@ -6,5 +6,5 @@ package com.yasuaki.gradle.jokesfromhell.ui;
 
 public interface MainMvpView {
 
-    void intentJokeDisplay(String joke);
+    void storeJokeAndGoIntent(String joke);
 }
