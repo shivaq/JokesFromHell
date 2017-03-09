@@ -86,8 +86,8 @@ dependencies {
     })
 
     // google play services
-    compile "com.google.android.gms:play-services-gcm:$rootProject.googlePlayServicesVersion"
-    compile "com.google.android.gms:play-services-ads:$rootProject.googlePlayServicesVersion"
+    freeCompile "com.google.android.gms:play-services-gcm:$rootProject.googlePlayServicesVersion"
+    freeCompile "com.google.android.gms:play-services-ads:$rootProject.googlePlayServicesVersion"
 
     // java local library
     compile project(':jokesinhell')
