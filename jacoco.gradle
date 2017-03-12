@@ -1,0 +1,78 @@
+apply plugin: 'jacoco-android'
+
+jacoco {
+    toolVersion = "0.7.8"
+}
+
+project.afterEvaluate {
+
+    def buildTypes = ["debug"]
+    def productFlavors = ["devFree", "devPaid"]
+
+    // When no product flavors defined, use empty
+    if (!productFlavors) productFlavors.add('')
+
+    productFlavors.each { productFlavorName ->
+        buildTypes.each { buildTypeName ->
+
+
+            def sourceName, sourcePath
+
+            if (!productFlavorName) {
+                sourceName = sourcePath = "${buildTypeName}"// e.g. debug
+            } else {
+                sourceName = "${productFlavorName}${buildTypeName.capitalize()}"// e.g. devFreeDebug
+                sourcePath = "${productFlavorName}/${buildTypeName}"// e.g. devFree/debug
+            }
+
+            def testTaskName = "test${sourceName.capitalize()}UnitTest"// e.g. testDevFreeDebugUnitTest
+
+            // e.g. testDevFreeDebugUnitTestCoverage
+            task "${testTaskName}Coverage" (type:JacocoReport, dependsOn: "$testTaskName") {
+
+                group = "Reporting"
+                description = "Generate Jacoco coverage reports on the ${sourceName.capitalize()} build."
+
+                def fileFilter = ['**/R.class',
+                                  '**/R$*.class',
+                                  '**/BuildConfig.*',
+                                  '**/Manifest*.*',
+                                  'android/**/*.*',
+                                  '**/Lambda$*.class', //Retrolambda
+                                  '**/Lambda.class',
+                                  '**/*Lambda.class',
+                                  '**/*Lambda*.class',
+                                  '**/*Lambda*.*',
+                                  '**/*Builder.*',
+                                  '**/*_MembersInjector.class', //Dagger2 generated code
+                                  '**/*_MembersInjector*.*', //Dagger2 generated code
+                                  '**/*_*Factory*.*', //Dagger2 generated code
+                                  '**/*Component*.*', //Dagger2 generated code
+                                  '**/*Module*.*' //Dagger2 generated code
+                ]
+
+
+                def freeOrPaid = productFlavorName.substring(3).toLowerCase()// e.g. free
+
+                def coverageSourceDirs = [
+                        "src/main/java",
+                        "src/$freeOrPaid/java",
+                        "src/$buildTypeName/java"
+                ]
+
+                classDirectories = fileTree(
+                        dir: "${project.buildDir}/intermediates/classes/${sourcePath}",
+                        excludes: fileFilter
+                )
+                additionalSourceDirs = files(coverageSourceDirs)
+                sourceDirectories = files(coverageSourceDirs)
+                executionData = fileTree(dir: project.projectDir, includes: ['**/*.exec', '**/*.ec'])
+
+                reports {
+                    xml.enabled = true
+                    html.enabled = true
+                }
+            }
+        }
+    }
+}
